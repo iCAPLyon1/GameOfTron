@@ -10,6 +10,10 @@
         <![endif]-->
         <script type="text/javascript" src="js/script.js"></script>
 
+        <script type="text/javascript" src="js/game.js"></script>
+
+        <script type="text/javascript" src="js/polyfill.js"></script>
+
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
     </head>
@@ -22,9 +26,19 @@
 
         <div class="row-fluid">
 
-            <aside class="span3">form</aside>
+            <aside class="span3">
+                <form>
+                <ul>  
+                    <li><input id="username" type="text"></li>  
+                    <li><input type="color" placeholder="#FFOOCC"/></li>  
+                    <li><input type="range" min="1" max="10" value="1"/></li>  
+                </ul>
+            </form>
+            </aside>
 
-            <div id="game" class="span6">game area</div>
+            <div id="game" class="span6">
+                <canvas id="game-canvas"></canvas>
+            </div>
        
             <ul id="user_ranking" class="span3">
                 <li class="user" id="user_00">
