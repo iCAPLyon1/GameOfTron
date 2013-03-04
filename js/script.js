@@ -6,6 +6,15 @@ Modernizr.load([
             Modernizr.load('vendor/jquery-1.9.1.min.js');
       }
     }
+  },
+  {
+    load: 'js/player.js',
+  },
+  {
+    load: 'js/game.js',
+  },
+  {
+    load: 'js/gameManager.js',
   }
 ]);
 
