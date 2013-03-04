@@ -4,7 +4,8 @@ var canvasOptions = {
     'bgcolor' : '#333333',
     'bordercolor' : '#000000',
     'shadowOffset' : 1,
-    'shadowBlur' :2
+    'shadowBlur' :2,
+    'autoMove' : true
 }
 
 var player = {
@@ -21,6 +22,7 @@ var player = {
 }
 
 var wall = new Array();
+var intervalId = null;
 
 window.onload=function()
 {
@@ -99,6 +101,9 @@ function bindCanvasEvents(canvas, canvasOptions, player)
         if(e.keyCode >= 37 && e.keyCode <= 40){
             e.preventDefault();
             if(!player.isDead) canvasKeydown(e, canvas, canvasOptions, player); 
+            else{
+                if(canvasOptions.autoMove) stopMoving();
+            }
         }
     },false);
 
@@ -118,9 +123,42 @@ function canvasKeydown(event, canvas, canvasOptions, player){
     if(event.keyCode >= 37 && event.keyCode <= 40){
         if(isDead(player, canvasOptions)){
             player.isDead = true;
+            if(canvasOptions.autoMove) stopMoving();
         } else {
             savePlayerPoint(ctx, canvasOptions, player);
-            printPlayerPoints(player);
+            //printPlayerPoints(player);
+            if(canvasOptions.autoMove) {
+                stopMoving();
+                intervalId = window.setInterval(function(){startMoving(event.keyCode, canvas, canvasOptions, player);}, 5);
+            }
         }
     }
+}
+
+function startMoving(keyCode, canvas, canvasOptions, player)
+{
+    var ctx = canvas.getContext("2d");
+    if(keyCode == 39){ // handle right key
+        player.lastPosition.x = Math.min(canvasOptions.width, player.lastPosition.x +1);
+    } else if (keyCode == 37) { // handle left key
+        player.lastPosition.x = Math.max(0, player.lastPosition.x -1);
+    } else if (keyCode == 40) { // handle down key
+        player.lastPosition.y = Math.min(canvasOptions.height, player.lastPosition.y +1);
+    } else if (keyCode == 38) { // handle up key
+        player.lastPosition.y = Math.max(0, player.lastPosition.y -1);
+    }
+    if(keyCode >= 37 && keyCode <= 40){
+        if(isDead(player, canvasOptions)){
+            player.isDead = true;
+            stopMoving();
+        } else {
+            savePlayerPoint(ctx, canvasOptions, player);
+        }
+    }
+}
+
+function stopMoving()
+{
+    if(intervalId!=null) window.clearInterval(intervalId);
+    intervalId = null;
 }
