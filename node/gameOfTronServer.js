@@ -8,8 +8,9 @@ io.sockets.on('connection', function (socket) {
   playerNumber++;
   socket.on('update', function (user) {
     var id = user.id;
+    //console.log(user);
     game.users[id] = user;
-    console.log(game);
-    socket.broadcast.emit('refresh', game);
+    //console.log(game.users);
+    socket.broadcast.emit('refresh', game.users);
   });
 });

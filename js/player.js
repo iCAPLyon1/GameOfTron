@@ -1,4 +1,5 @@
 function Player(_name, _color, _size){
+    this.id = null;
     this.name = _name;
     this.color = _color;
     this.size = _size;
@@ -8,5 +9,5 @@ function Player(_name, _color, _size){
         'x' : null,
         'y' :null,
     };
-    this.points = [];
+    this.points = [{'x':Math.ceil(Math.random()*100), 'y':Math.ceil(Math.random()*100)}];
 };

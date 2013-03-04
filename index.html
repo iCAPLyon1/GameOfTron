@@ -9,6 +9,8 @@
             <script type="text/javascript" src="vendor/aFarkas-html5shiv-84b5018/src/html5shiv.js"></script>
         <![endif]-->
         <script type="text/javascript" src="js/script.js"></script>
+        <script type="text/javascript" src="js/polyfill.js"></script>
+        <script src="http://localhost:1025/socket.io/socket.io.js"></script>
 
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
@@ -22,7 +24,16 @@
 
         <div class="row-fluid">
 
-            <aside class="span3">form</aside>
+            <aside class="span3">
+                <form method="post" action="#" name="player">
+                    <ul>  
+                        <li><input id="username" type="text" placeholder="#name" name="username" /></li>  
+                        <li><input type="color" placeholder="#FFOOCC"  name="color" /></li>  
+                        <li><input type="range" min="1" max="10" value="1" name="size" /></li>  
+                    </ul>
+                    <input type="submit" value="Start" />
+                </form>
+            </aside>
 
             <div id="game" class="span6">
                 <canvas id="game-canvas"></canvas>

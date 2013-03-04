@@ -1,31 +1,5 @@
-var canvasOptions = {
-    'width' : 600,
-    'height' : 400,
-    'bgcolor' : '#333333',
-    'bordercolor' : '#000000',
-    'shadowOffset' : 1,
-    'shadowBlur' :2
-}
-
-var player = {
-    'color' : '#ff0000',
-    'name' : 'Panos',
-    'shadowColor' : 'rgba(255,0,0,0.6)',
-    'size' : 1,
-    'isDead' : false,
-    'lastPosition' : {
-        'x' : null,
-        'y' :null,
-    },
-    'points' : [{'x':10, 'y':10}, {'x':11, 'y':10}, {'x':12, 'y':10}]
-}
-
 var wall = new Array();
-
-window.onload=function()
-{
-    var canvas = initializeCanvas('game-canvas', canvasOptions, player);
-};
+var intervalId = null;
 
 function initializeCanvas(canvasId, options, player) 
 {
@@ -38,10 +12,27 @@ function initializeCanvas(canvasId, options, player)
     ctx.fillStyle=options.bgcolor;
     ctx.fillRect(0,0,options.width, options.height);
 
-    loadPlayerPoints(ctx, canvasOptions, player);
-    bindCanvasEvents(c, canvasOptions, player);
+
+
+    loadPlayerPoints(ctx, options, player);
+    bindCanvasEvents(c, options, player);
 
     return c;
+}
+
+function refreshCanvas(canvas, canvasOptions, players)
+{
+    var ctx=canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvasOptions.width, canvasOptions.height);
+    ctx.fillStyle=canvasOptions.bgcolor;
+    ctx.fillRect(0,0,canvasOptions.width, canvasOptions.height);
+    for(var i = 0; i < players.length; i++)
+    {
+        var player = players[i];
+        if(typeof player != "undefined" && player != null) {
+            loadPlayerPoints(ctx, canvasOptions, player);
+        }
+    }
 }
 
 function drawPlayerPoint(context, canvasOptions, player)
@@ -61,6 +52,7 @@ function savePlayerPoint(context, canvasOptions, player)
     drawPlayerPoint(context, canvasOptions, player);
     player.points.push({'x':player.lastPosition.x, 'y':player.lastPosition.y});
     addWall(player, canvasOptions);
+    canvasOptions.socket.emit('update', player);
 }
 
 function printPlayerPoints(player)
@@ -99,6 +91,9 @@ function bindCanvasEvents(canvas, canvasOptions, player)
         if(e.keyCode >= 37 && e.keyCode <= 40){
             e.preventDefault();
             if(!player.isDead) canvasKeydown(e, canvas, canvasOptions, player); 
+            else{
+                if(canvasOptions.autoMove) stopMoving();
+            }
         }
     },false);
 
@@ -118,9 +113,42 @@ function canvasKeydown(event, canvas, canvasOptions, player){
     if(event.keyCode >= 37 && event.keyCode <= 40){
         if(isDead(player, canvasOptions)){
             player.isDead = true;
+            if(canvasOptions.autoMove) stopMoving();
         } else {
             savePlayerPoint(ctx, canvasOptions, player);
-            printPlayerPoints(player);
+            //printPlayerPoints(player);
+            if(canvasOptions.autoMove) {
+                stopMoving();
+                intervalId = window.setInterval(function(){startMoving(event.keyCode, canvas, canvasOptions, player);}, 5);
+            }
         }
     }
+}
+
+function startMoving(keyCode, canvas, canvasOptions, player)
+{
+    var ctx = canvas.getContext("2d");
+    if(keyCode == 39){ // handle right key
+        player.lastPosition.x = Math.min(canvasOptions.width, player.lastPosition.x +1);
+    } else if (keyCode == 37) { // handle left key
+        player.lastPosition.x = Math.max(0, player.lastPosition.x -1);
+    } else if (keyCode == 40) { // handle down key
+        player.lastPosition.y = Math.min(canvasOptions.height, player.lastPosition.y +1);
+    } else if (keyCode == 38) { // handle up key
+        player.lastPosition.y = Math.max(0, player.lastPosition.y -1);
+    }
+    if(keyCode >= 37 && keyCode <= 40){
+        if(isDead(player, canvasOptions)){
+            player.isDead = true;
+            stopMoving();
+        } else {
+            savePlayerPoint(ctx, canvasOptions, player);
+        }
+    }
+}
+
+function stopMoving()
+{
+    if(intervalId!=null) window.clearInterval(intervalId);
+    intervalId = null;
 }
