@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap-responsive.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <title>Demo</title>
+  </head>
+
+  <body>
+    last refresh at <span id="refresh"></span>
+    <a id="toggleWatch" href="#" class="btn btn-inverse btn-large">Start</a>
+    <br>
+    Direction : <span id="LR"></span>&nbsp;<span id="UD"></span>
+    <script type="text/javascript">
+
+      var watchId;
+
+      function displayPosition(position) {
+        console.log('displayPosition');
+        $('#refresh').html(position.timestamp);
+        $('body .position-data').remove();
+        var coords = position.coords;
+        var $displayPosition = $('\
+          <table class="table position-data">\
+            <tr>\
+              <th>Latitude</th>\
+              <td id="latitude_data">'+ coords.latitude +'</td>\
+            </tr>\
+            <tr>\
+              <th>Longitude</th>\
+              <td id="longitude_data">'+ coords.longitude +'</td>\
+            </tr>\
+            <tr>\
+              <th>Accuracy</th>\
+              <td id="accuracy_data">'+ coords.accuracy +'</td>\
+            </tr>\
+            <tr>\
+              <th>Heading</th>\
+              <td id="heading_data">'+ coords.heading +'</td>\
+            </tr>\
+            <tr>\
+              <th>Speed</th>\
+              <td id="speed_data">'+ coords.speed +'</td>\
+            </tr>\
+          </table>'
+        );
+
+        $('body').append($displayPosition);
+      }
+
+      function displayOrientation(eventData) {
+        console.log('displayOrientation');
+        $('body .orientation-data').remove();
+        var $displayOrientation = $('\
+          <table class="table orientation-data">\
+            <tr>\
+              <th>Gamma</th>\
+              <td id="gamma_data">'+ eventData.gamma +'</td>\
+            </tr>\
+            <tr>\
+              <th>Alpha</th>\
+              <td id="alpha_data">'+ eventData.alpha +'</td>\
+            </tr>\
+            <tr>\
+              <th>Beta</th>\
+              <td id="beta_data">'+ eventData.beta +'</td>\
+            </tr>\
+          </table>'
+        );
+
+        $('body').append($displayOrientation);
+        displayDirection(eventData);
+      }
+
+      function displayDirection(eventData) {
+        
+        if(eventData.beta < 0){
+            var vitesseY = Math.abs(Math.floor(eventData.beta / 10));
+            if(vitesseY > 0) {
+              $('#UD').html("down(" + vitesseY + ")");
+            } else {
+              $('#UD').html("");
+            }
+        } else {
+            var vitesseY = Math.abs(Math.floor(eventData.beta / 20));
+            if(vitesseY > 0) {
+              $('#UD').html("up(" + vitesseY + ")");
+            } else {
+              $('#UD').html("");
+            }
+        }
+        
+        var vitesseX = Math.abs(Math.floor(eventData.gamma / 15));
+        if(vitesseX > 0) { 
+          if(eventData.gamma < 0){
+              $('#LR').html("left(" + vitesseX + ")");
+          } else {
+              $('#LR').html("right(" + vitesseX + ")");
+          }
+        } else {
+           $('#LR').html("");
+        }
+      }
+
+      function error(position_error) {
+          switch(position_error.code){
+            case position_error.PERMISSION_DENIED:
+              alert("L'utilisateur n'a pas autorisé l'accès à sa position");
+              break;
+            case position_error.POSITION_UNAVAILABLE:
+              alert("L'emplacement de l'utilisateur n'a pas pu être déterminé");
+              break;
+            case position_error.TIMEOUT:
+              alert("Le service n'a pas répondu à temps");
+              break;
+          }
+      }
+
+      $(document).ready(function() {
+
+        if (window.DeviceOrientationEvent) {
+      console.log("DeviceOrientation is supported");
+            window.addEventListener('deviceorientation', displayOrientation, false);
+      }
+
+        $('#toggleWatch').on('click', function(event){
+          event.preventDefault();
+          var enable = !$(this).hasClass('btn-inverse');
+
+          if(!enable) {
+            $(this).removeClass('btn-inverse').addClass('btn-danger').html('Stop');
+            if (navigator.geolocation) {
+              console.log('Ok');
+              watchId = navigator.geolocation.watchPosition(displayPosition, error, {enableHighAccuracy: true});
+            } else {
+              console.log('not supported');
+            }
+          } else {
+            $(this).removeClass('btn-danger').addClass('btn-inverse').html('Start');
+            console.log('Stop watching');
+            navigator.geolocation.clearWatch(watchId);
+          }
+        });
+      })
+    </script>
+
+    <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.js"></script>
+  </body>
+</html>
