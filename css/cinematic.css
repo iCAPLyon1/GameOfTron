@@ -1,0 +1,158 @@
+#game {
+    height: 400px;
+    width: 600px;
+    display: block;
+    position: relative;
+}
+
+#game > .step {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background: rgba(0,0,0,1);
+    display: block;
+}
+
+#game > .step > h1 {
+    position: absolute;
+    top: 160px;
+    width: 100%;
+    text-align: center;
+    text-shadow: 2px 2px #1fadc1;
+}
+#game > .step > h1 {
+    color: rgba(255,255,255,1);
+}
+#game > .step > h1 > a {
+    text-decoration: none;
+    color: rgba(255,255,255,1);
+}
+
+#game > .step > .background {
+    position: absolute;
+    top: 150px;
+    width: 100px;
+    height: 100px;
+    background: rgba(0,0,0,0.7);
+    left: 250px;
+}
+
+#game.initialize > #end {
+    opacity: 0;
+}
+#game.end > #start {
+    opacity: 0;
+}
+#game.running > .step {
+    opacity: 0;
+    animation-play-state: paused;
+}
+
+/* ----------------------------
+ * ----------- ALL ------------
+ * ----------------------------
+ */
+@keyframes running-disappear
+{
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* ----------------------------
+ * ---------- START -----------
+ * ----------------------------
+ */
+@keyframes start-pulse
+{
+    0% {
+        text-shadow: -8px 1px 10px #1fadc1, -4px 1px 1px #177F8E;
+    }
+    25% {
+        text-shadow: -6px 6px 10px #1fadc1, -2px 2px 1px #177F8E;
+    }
+    50% {
+        text-shadow: 0px 8px 10px #1fadc1, 0px 4px 1px #177F8E;
+    }
+    75% {
+        text-shadow: 6px 6px 10px #1fadc1, 2px 2px 1px #177F8E;
+    }
+    100% {
+        text-shadow: 8px 1px 10px #1fadc1, 4px 1px 1px #177F8E;
+    }
+}
+
+
+#start > h1 {
+    animation-play-state: paused;
+}
+
+.initialize > #start > h1 {
+    animation-name: start-pulse;
+    animation-duration: 2s;
+    animation-delay: 0s;
+    animation-timing-function: cubic-bezier(0.250, 0.250, 0.750, 0.750); 
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-play-state: running;
+}
+
+/* ----------------------------
+ * ----------- END ------------
+ * ----------------------------
+ */
+@keyframes end-fall
+{
+    0% { 
+        top:0px; 
+        text-shadow: 0px 166px 100px #1fadc1, 0px 161px 20px #177F8E; 
+        opacity: 0.1;
+        animation-timing-function:ease-in; 
+    }
+    37% { 
+        top:160px; 
+        opacity: 1;
+        text-shadow: 0px 6px 10px #1fadc1, 0px 1px 1px #177F8E;
+        animation-timing-function:ease-out; 
+    }
+    55% { 
+        top:120px; 
+        opacity: 0.8;
+        text-shadow: 0px 46px 30px #1fadc1, 0px 41px 8px #177F8E; 
+        animation-timing-function:ease-in;  
+    }
+    73% { 
+        top:160px; 
+        opacity: 1;
+        text-shadow: 0px 6px 10px #1fadc1, 0px 1px 1px #177F8E; 
+        animation-timing-function:ease-out; 
+    }
+    82% { 
+        top:140px; 
+        opacity: 0.9;
+        text-shadow: 0px 26px 20px #1fadc1, 0px 21px 4px #177F8E;   
+        animation-timing-function:ease-in;
+    }
+    100% {
+        top:160px; 
+        opacity: 1;
+        text-shadow: 0px 6px 10px #1fadc1, 0px 1px 1px #177F8E; 
+    }
+}
+
+.end > #end > h1 {
+    text-shadow: 0px 6px 10px #1fadc1, 0px 1px 1px #177F8E;
+
+    animation-name: end-fall;
+    animation-duration: 1s;
+    animation-delay: 0s;
+    animation-timing-function: cubic-bezier(0.405, 0.775, 0.725, 1.215); 
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-play-state: running;
+}

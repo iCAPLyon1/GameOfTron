@@ -35,9 +35,26 @@
                 </form>
             </aside>
 
-            <div id="game" class="span6">
+            <div id="game" class="span6 initialize">
                 <canvas id="game-canvas"></canvas>
+                <div id="start" class="step">
+                    <h1>
+                        <a href="#">START</a>
+                    </h1>
+                </div>
+                <div id="end" class="step">
+                    <h1>
+                        <a href="#">GAME OVER</a>
+                    </h1>
+                    <p class="score">42 !</p>
+                </div>
             </div>
+
+            <ul>
+                <li><a id="test-initialize" href="#">initialize</a></li>
+                <li><a id="test-running" href="#">running</a></li>
+                <li><a id="test-end" href="#">end</a></li>
+            </ul>
        
             <ul id="user_ranking" class="span3">
                 <li class="user" id="user_00">
