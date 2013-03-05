@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
             $(this.size).val()
         );
 
-        var socket = io.connect('http://localhost:1025');
+        var socket = io.connect('http://134.214.233.109:1025');
 
         var canvasOptions = {
             'width' : 600,

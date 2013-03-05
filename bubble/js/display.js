@@ -1,3 +1,5 @@
+var socket = io.connect("http://134.214.233.109:2222");
+
 $(document).ready(function () {
     console.log('ready');
     var speed = 10;
@@ -56,7 +58,6 @@ $(document).ready(function () {
         }
     }); 
 
-    var socket = io.connect("http://134.214.232.142:2222");
     socket.on('status', function (data) {
         console.log(data);
     });
@@ -76,5 +77,5 @@ $(document).ready(function () {
     socket.on('goRight', function(data) {
         console.log(data);
         right(data.value);
-    });          
+    });
 });

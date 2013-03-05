@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap-responsive.css" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://134.214.233.109:2222/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/remote.js"></script>
     <title>Demo</title>
   </head>
 
@@ -77,11 +78,12 @@
       }
 
       function displayDirection(eventData) {
-        
+
         if(eventData.beta < 0){
             var vitesseY = Math.abs(Math.floor(eventData.beta / 10));
             if(vitesseY > 0) {
               $('#UD').html("down(" + vitesseY + ")");
+              sendDown(vitesseY);
             } else {
               $('#UD').html("");
             }
@@ -89,17 +91,20 @@
             var vitesseY = Math.abs(Math.floor(eventData.beta / 20));
             if(vitesseY > 0) {
               $('#UD').html("up(" + vitesseY + ")");
+              sendUp(vitesseY);
             } else {
               $('#UD').html("");
             }
         }
-        
+
         var vitesseX = Math.abs(Math.floor(eventData.gamma / 15));
         if(vitesseX > 0) { 
           if(eventData.gamma < 0){
               $('#LR').html("left(" + vitesseX + ")");
+              sendLeft(vitesseX);
           } else {
               $('#LR').html("right(" + vitesseX + ")");
+              sendRight(vitesseX);
           }
         } else {
            $('#LR').html("");

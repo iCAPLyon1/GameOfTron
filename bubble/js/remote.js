@@ -1,34 +1,29 @@
-$(document).ready(function(){
-
-    var socket = io.connect('http://localhost:2222');
-      socket.on('status', function (data) {
-        console.log(data);
-      });
-
-    $(".direction-btn").click(function(){
-        eval("send"+$(this).attr("data-toggle")+"('"+$(this).attr("data-toggle")+"', socket)");
+var socket = io.connect('http://134.214.233.109:2222');
+$(document).ready(function() {
+    socket.on('status', function (data) {
+      console.log(data);
     });
 });
 
-function sendUp(value, socket)
+function sendUp(value)
 {
-    console.log("UP");
+    console.log("Up");
     socket.emit('up', { 'value': value });
 }
 
-function sendDown(value, socket)
+function sendDown(value)
 {
-    console.log("DOwn");
+    console.log("Down");
     socket.emit('down', { 'value': value });
 }
 
-function sendLeft(value, socket)
+function sendLeft(value)
 {
     console.log("Left");
     socket.emit('left', { 'value': value });
 }
 
-function sendRight(value, socket)
+function sendRight(value)
 {
     console.log("Right");
     socket.emit('right', { 'value': value });
